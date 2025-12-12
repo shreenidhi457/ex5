@@ -33,120 +33,131 @@ Publish the website in the given URL.
 
 ## PROGRAM :
 ~~~
-#math.html
+math.html
+
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Area of Rectangle</title>
-
-    <style>
-        body {
-            background-color: rgb(217, 0, 255);
-            font-size: 20px;
-        }
-
-        .box {
-            width: 500px;
-            height: 300px;
-            background-color: rgb(226, 188, 217);
-            margin: 150px auto;
-            border: 7px dashed rgb(128, 0, 32);
-        }
-
-        h1 {
-            color: rgb(144, 0, 255);
-            text-align: center;
-            padding-top: 20px;
-        }
-
-        .formelt {
-            color: rgb(154, 78, 139);
-            text-align: center;
-            margin-top: 7px;
-            margin-bottom: 6px;
-        }
-    </style>
+<title>Power of a Lamp</title>
+<style>
+    body {
+        background-color: powderblue;
+        font-family: Arial;
+    }
+    .box {
+        width: 380px;
+        background-color: plum;
+        color: black;
+        padding: 20px;
+        margin: auto;
+        margin-top: 120px;
+        border: 5px dotted black;
+        text-align: left;
+    }
+    input {
+        width: 150px;
+        padding: 5px;
+    }
+    button {
+        margin-top: 10px;
+        padding: 5px 15px;
+    }
+</style>
 </head>
-
 <body>
 
-<div class="edge">
-    <div class="box">
-        <h1>Area of a Rectangle</h1>
+<div class="box">
+    <h2 style="text-align:center;">Power of a Lamp</h2>
 
-        <form method="POST">
-            {% csrf_token %}
-            
-            <div class="formelt">
-                Length :
-                <input type="text" name="length" value
-            </div>
+    Current : 
+    <input type="text" id="i"> (in A)
+    <br><br>
 
-            <div class="formelt">
-                Breadth :
-                <input type="text" name="breadth" valu
-            </div>
+    Resistance : 
+    <input type="text" id="r"> (in Ω)
+    <br><br>
 
-            <div class="formelt">
-                <input type="submit" value="Calculate"
-            </div>
+    <button onclick="calc()">Calculate</button>
+    <br><br>
 
-            <div class="formelt">
-                Area :
-                <input type="text" name="area" value="
-            </div>
-        </form>
-
-    </div>
+    Power : 
+    <input type="text" id="p" readonly> W
 </div>
+
+<script>
+function calc() {
+    let I = parseFloat(document.getElementById("i").value);
+    let R = parseFloat(document.getElementById("r").value);
+    
+    if (!isNaN(I) && !isNaN(R)) {
+        document.getElementById("p").value = (I * I * R).toFixed(0);
+    } else {
+        document.getElementById("p").value = "Error";
+    }
+}
+</script>
 
 </body>
 </html>
-#views.py
+
+
+views.py
+
 from django.shortcuts import render
 
-def rectanglearea(request):
+def lamp_power(request):
+    print("Request :", request)
     context = {}
-    context['area'] = "0"
-    context['l'] = "0"
-    context['b'] = "0"
+    context['power'] = "0"
+    context['I'] = "0"
+    context['R'] = "0"
 
-    if request.method == 'POST':
+    if request.method == "POST":
         print("POST method is used")
-        l = request.POST.get('length', '0')
-        b = request.POST.get('breadth', '0')
 
-        print("length=", l)
-        print("breadth=", b)
+        I = request.POST.get('current', '0')
+        R = request.POST.get('resistance', '0')
 
-        area = int(l) * int(b)
-        context['area'] = area
-        context['l'] = l
-        context['b'] = b
+        print("Current :", I)
+        print("Resistance :", R)
 
-        print("Area=", area)
+        try:
+            power = (float(I) * float(I)) * float(R)
+        except:
+            power = "Invalid"
+
+        context['power'] = power
+        context['I'] = I
+        context['R'] = R
+
+        print("Power :", power)
 
     return render(request, 'mathapp/math.html', context)
-    #urls.py
-    from django.contrib import admin
+
+
+urls.py
+
+from django.contrib import admin
 from django.urls import path
-from mathapp import views
+from mathapp import views   
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('areaofrectangle/', views.rectanglearea, name="areaofrectangle"),
-    path('', views.rectanglearea, name="areaofrectangleroot"),
+
+    path('lamp-power/', views.lamp_power, name='lamp_power'),
+
+    path('', views.lamp_power, name='lamp_power_root'),
 ]
 ~~~
 
-
 ## SERVER SIDE PROCESSING:
+<img width="1893" height="1077" alt="Screenshot 2025-12-12 110145" src="https://github.com/user-attachments/assets/5f754b2f-0a5d-4568-9784-6fb4ecd21531" />
 
 
-<img width="1919" height="1075" alt="Screenshot 2025-12-12 095250" src="https://github.com/user-attachments/assets/db5f96ab-c275-4a9a-8f5e-16d76ba251e8" />
+## HOME PAGE:
+![outputex4](https://github.com/user-attachments/assets/9169a78b-b2ca-47cf-a4f0-bb047342cc76)
 
-## HOMEPAGE:
 
-![WhatsApp Image 2025-12-12 at 9 57 43 AM](https://github.com/user-attachments/assets/9640c51e-2149-4aae-b2f5-3b1262719c8b)
 
 ## RESULT:
 The program for performing server side processing is completed successfully.
